@@ -2,6 +2,7 @@ import WebStory from "../models/webstory.js";
 import slugify from "slugify";
 import multer from "multer";
 const upload = multer();
+import moment from "moment-timezone"
 
 
 export const createWebStory = async (req, res) => {
@@ -12,7 +13,7 @@ export const createWebStory = async (req, res) => {
       });
     }
 
-    const { title, description, slug, coverphoto, date, slides, link, lastimage, lastheading } = req.body;
+    const { title, description, slug, coverphoto, slides, link, lastimage, lastheading } = req.body;
 
 
     if (!title || title.length > 69) {
@@ -27,11 +28,11 @@ export const createWebStory = async (req, res) => {
       });
     }
 
-    if (!date) {
-      return res.status(400).json({
-        error: 'Date is required'
-      });
-    }
+    // if (!date) {
+    //   return res.status(400).json({
+    //     error: 'Date is required'
+    //   });
+    // }
 
     if (!slug) {
       return res.status(400).json({
@@ -56,7 +57,9 @@ export const createWebStory = async (req, res) => {
     story.slug = slugify(slug).toLowerCase();
     story.description = description;
     story.coverphoto = coverphoto;
-    story.date = date;
+    // story.date = date;
+    const currentDateTimeIST = moment().tz('Asia/Kolkata').format();
+    story.date=currentDateTimeIST;
     story.slides = JSON.parse(slides);
     story.link = link;
     story.lastheading = lastheading;
@@ -170,6 +173,9 @@ export const updateStory = async (req, res) => {
       }
       let story = await WebStory.findOne({ slug }).exec();
 
+      const currentDateTimeIST = moment().tz('Asia/Kolkata').format();
+    story.date=currentDateTimeIST;
+
       Object.keys(updateFields).forEach((key) => {
         if (key === 'title') {
           story.title = updateFields.title;
@@ -179,8 +185,6 @@ export const updateStory = async (req, res) => {
           story.slug = slugify(updateFields.slug).toLowerCase();
         } else if (key === 'coverphoto') {
           story.coverphoto = updateFields.coverphoto;
-        } else if (key === 'date') {
-          story.date = updateFields.date;
         } else if (key === 'slides') {
           story.slides = JSON.parse(updateFields.slides);
         } else if (key === 'link') {
