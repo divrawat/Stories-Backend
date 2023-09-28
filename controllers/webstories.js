@@ -13,7 +13,7 @@ export const createWebStory = async (req, res) => {
       });
     }
 
-    const { title, description, slug, coverphoto, slides, link, lastimage, lastheading } = req.body;
+    const { title, description, slug, coverphoto, slides, link, lastimage, lastheading, ads } = req.body;
 
 
     if (!title || title.length > 69) {
@@ -64,6 +64,7 @@ export const createWebStory = async (req, res) => {
     story.link = link;
     story.lastheading = lastheading;
     story.lastimage = lastimage;
+    story.ads = ads;
 
     try {
       const savedStory = await story.save();
@@ -185,6 +186,8 @@ export const updateStory = async (req, res) => {
           story.slug = slugify(updateFields.slug).toLowerCase();
         } else if (key === 'coverphoto') {
           story.coverphoto = updateFields.coverphoto;
+        } else if (key === 'ads') {
+          story.ads = updateFields.ads;
         } else if (key === 'slides') {
           story.slides = JSON.parse(updateFields.slides);
         } else if (key === 'link') {

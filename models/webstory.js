@@ -37,15 +37,15 @@ const webstorySchema = new mongoose.Schema({
   },
   link:{
     type: String,
-    default: ''
+  },
+  ads:{
+    type: String,
   },
   lastimage:{
     type: String,
-    default: ''
   },
   lastheading:{
     type: String,
-    default: ''
   },
   slides: {
     type: [slideSchema],
