@@ -59,7 +59,7 @@ export const createWebStory = async (req, res) => {
     story.coverphoto = coverphoto;
     // story.date = date;
     const currentDateTimeIST = moment().tz('Asia/Kolkata').format();
-    story.date=currentDateTimeIST;
+    story.date = currentDateTimeIST;
     story.slides = JSON.parse(slides);
     story.link = link;
     story.lastheading = lastheading;
@@ -74,6 +74,10 @@ export const createWebStory = async (req, res) => {
       return res.status(500).json({ error: "Slug should be unique" });
     }
   });
+
+  fetch(`${process.env.MAIN_URL}/api/revalidate?path=/${story.slug}`, {
+    method: 'POST',
+  })
 };
 
 
@@ -104,6 +108,22 @@ export const allstories = async (req, res) => {
       .sort({ date: -1 })
       .select('title slug date coverphoto description')
       .limit(12)
+      .exec();
+
+    res.json(data);
+  } catch (err) {
+    return res.json({
+      error: "Something Went Wrong"
+    });
+  }
+};
+
+
+export const allslugs = async (req, res) => {
+  try {
+    const data = await WebStory.find({})
+      .sort({ date: -1 })
+      .select('slug')
       .exec();
 
     res.json(data);
@@ -153,6 +173,10 @@ export const deletestory = async (req, res) => {
       error: errorHandler(err)
     });
   }
+
+  fetch(`${process.env.MAIN_URL}/api/revalidate?path=/${slug}`, {
+    method: 'POST',
+  })
 };
 
 
@@ -175,7 +199,7 @@ export const updateStory = async (req, res) => {
       let story = await WebStory.findOne({ slug }).exec();
 
       const currentDateTimeIST = moment().tz('Asia/Kolkata').format();
-    story.date=currentDateTimeIST;
+      story.date = currentDateTimeIST;
 
       Object.keys(updateFields).forEach((key) => {
         if (key === 'title') {
@@ -208,4 +232,8 @@ export const updateStory = async (req, res) => {
       return res.status(500).json({ error: "Internal Server Error" });
     }
   });
+
+  fetch(`${process.env.MAIN_URL}/api/revalidate?path=/${story.slug}`, {
+    method: 'POST',
+  })
 };
