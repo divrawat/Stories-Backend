@@ -31,9 +31,6 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-app.use('/uploads', express.static('uploads'));
-app.use(express.urlencoded({ extended: true }));
-
 
  app.use('/api', storyRoutes);
  app.use('/api', authRoutes);
