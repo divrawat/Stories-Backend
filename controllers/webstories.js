@@ -1,7 +1,5 @@
 import WebStory from "../models/webstory.js";
 import slugify from "slugify";
-import multer from "multer";
-const upload = multer();
 import moment from "moment-timezone"
 
 
