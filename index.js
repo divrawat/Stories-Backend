@@ -31,11 +31,8 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-
  app.use('/api', storyRoutes);
  app.use('/api', authRoutes);
-
-
 
 
 app.get('/', (req, res) => {
