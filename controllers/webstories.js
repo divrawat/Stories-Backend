@@ -112,7 +112,7 @@ export const updateStory = async (req, res) => {
       if (!slug) { return res.status(404).json({ error: 'Story not found' }) }
 
       let story = await WebStory.findOne({ slug }).exec();
-
+ 
       const currentDateTimeIST = moment().tz('Asia/Kolkata').format();
       story.date = currentDateTimeIST;
 
