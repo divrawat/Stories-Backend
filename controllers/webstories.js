@@ -112,10 +112,8 @@ export const updateStory = async (req, res) => {
       if (!slug) { return res.status(404).json({ error: 'Story not found' }) }
 
       let story = await WebStory.findOne({ slug }).exec();
- 
       const currentDateTimeIST = moment().tz('Asia/Kolkata').format();
       story.date = currentDateTimeIST;
-
       Object.keys(updateFields).forEach((key) => {
         if (key === 'title') { story.title = updateFields.title; }
         else if (key === 'description') { story.description = updateFields.description; }
@@ -128,8 +126,8 @@ export const updateStory = async (req, res) => {
         else if (key === 'lastheading') { story.lastheading = updateFields.lastheading; }
       });
       const savedStory = await story.save();
-      fetch(`${process.env.MAIN_URL}/api/revalidate?path=/${story.slug}`, { method: 'POST' })
-  fetch(`${process.env.MAIN_URL}/api/revalidate?path=/`, { method: 'POST' })
+      fetch(`${process.env.MAIN_URL}/api/revalidate?path=/web-stories/${story.slug}`, { method: 'POST' })
+      fetch(`${process.env.MAIN_URL}/api/revalidate?path=/`, { method: 'POST' })
       return res.status(200).json(savedStory);
     } catch (error) {
       console.error("Error updating web story:", error);
